@@ -1,7 +1,6 @@
 import { getConnection } from '../config/database.js';
 
 export class ReservaService {
-  // Verificar disponibilidad de salón
   static async checkAvailability(fecha_reserva, salon_id, turno_id, reserva_id = null) {
     const connection = getConnection();
     let query = 'SELECT reserva_id FROM reservas WHERE fecha_reserva = ? AND salon_id = ? AND turno_id = ? AND activo = 1';
@@ -16,7 +15,6 @@ export class ReservaService {
     return rows.length === 0;
   }
 
-  // Verificar que el salón existe y está activo
   static async validateSalon(salon_id) {
     const connection = getConnection();
     const [rows] = await connection.execute(
@@ -26,7 +24,6 @@ export class ReservaService {
     return rows[0] || null;
   }
 
-  // Verificar que el turno existe y está activo
   static async validateTurno(turno_id) {
     const connection = getConnection();
     const [rows] = await connection.execute(
@@ -36,7 +33,6 @@ export class ReservaService {
     return rows[0] || null;
   }
 
-  // Calcular importe total de la reserva
   static async calculateTotal(salon_id, servicios = []) {
     const salon = await this.validateSalon(salon_id);
     if (!salon) {
@@ -64,11 +60,9 @@ export class ReservaService {
     return { importe_total, importe_salon };
   }
 
-  // Crear reserva con servicios
   static async createReservaWithServices(reservaData, servicios = []) {
     const connection = getConnection();
     
-    // Crear la reserva
     const [result] = await connection.execute(
       'INSERT INTO reservas (fecha_reserva, salon_id, usuario_id, turno_id, tematica, foto_cumpleaniero, importe_salon, importe_total) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [reservaData.fecha_reserva, reservaData.salon_id, reservaData.usuario_id, reservaData.turno_id, reservaData.tematica, reservaData.foto_cumpleaniero, reservaData.importe_salon, reservaData.importe_total]
@@ -76,7 +70,6 @@ export class ReservaService {
 
     const reserva_id = result.insertId;
 
-    // Agregar servicios si se proporcionan
     if (servicios && servicios.length > 0) {
       for (const servicio of servicios) {
         const [servicioData] = await connection.execute(

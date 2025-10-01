@@ -4,7 +4,6 @@ import { getConnection } from '../config/database.js';
 import { config } from '../config/index.js';
 
 export class AuthService {
-  // Verificar credenciales de usuario
   static async validateCredentials(nombre_usuario, contrasenia) {
     const connection = getConnection();
     const [rows] = await connection.execute(

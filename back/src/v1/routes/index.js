@@ -9,11 +9,6 @@ import estadisticaRoutes from './estadisticaRoutes.js';
 
 const router = express.Router();
 
-// Ruta de prueba
-router.get('/test', (req, res) => {
-  res.json({ message: 'API v1 funcionando correctamente' });
-});
-
 // Rutas de la API v1
 router.use('/auth', authRoutes);
 router.use('/salones', salonRoutes);
