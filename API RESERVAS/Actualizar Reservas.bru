@@ -1,0 +1,35 @@
+meta {
+  name: Actualizar Reservas
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:3000/api/v1/reservas/1
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6InJlc2VydmFfYXBwIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NTk3OTAwNzgsImV4cCI6MTc1OTg3NjQ3OH0.o_js21p--j6yywTA4sTdt8ZbVhL0_T9aa1rK8bXmSEs
+}
+
+body:json {
+  {
+    "fecha_reserva": "2025-10-06T16:00:00",
+    "salon_id": 1,
+    "turno_id": 1,
+    "tematica": "Fiesta de cumple",
+    "foto_cumpleaniero": "foto.png",
+    "servicios": [
+      {"servicio_id": 1},
+      {"servicio_id": 2}
+    ]
+  }
+  
+}
+
+settings {
+  encodeUrl: true
+}

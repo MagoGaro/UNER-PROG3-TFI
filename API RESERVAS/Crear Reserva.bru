@@ -1,0 +1,31 @@
+meta {
+  name: Crear Reserva
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:3000/api/v1/reservas
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6InJlc2VydmFfYXBwIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NTk3MDY0NjUsImV4cCI6MTc1OTc5Mjg2NX0.io6t6OrwkuwrWsPwWOJsk7D-HySP6Egi2_aKFofD96U
+}
+
+body:json {
+  {
+    "fecha_reserva": "2025-10-10T18:00:00",
+    "salon_id": 1,
+    "turno_id": 1
+  }
+  
+  
+  
+}
+
+settings {
+  encodeUrl: true
+}

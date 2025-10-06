@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "API RESERVAS",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

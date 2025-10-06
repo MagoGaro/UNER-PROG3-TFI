@@ -1,0 +1,19 @@
+meta {
+  name: Listar Reservas
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:3000/api/v1/reservas
+  body: none
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6InJlc2VydmFfYXBwIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NTk3OTAwNzgsImV4cCI6MTc1OTg3NjQ3OH0.o_js21p--j6yywTA4sTdt8ZbVhL0_T9aa1rK8bXmSEs
+}
+
+settings {
+  encodeUrl: true
+}

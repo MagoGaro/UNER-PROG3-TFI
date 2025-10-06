@@ -1,0 +1,43 @@
+meta {
+  name: Otener Todas las Reservas
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:3000/api/v1/reservas
+  body: json
+  auth: inherit
+}
+
+headers {
+  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6InJlc2VydmFfYXBwIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NTk3MDY0NjUsImV4cCI6MTc1OTc5Mjg2NX0.io6t6OrwkuwrWsPwWOJsk7D-HySP6Egi2_aKFofD96U
+}
+
+body:json {
+  [
+    {
+      "reserva_id": 8,
+      "fecha_reserva": "2025-10-10T18:00:00",
+      "salon_id": 1,
+      "usuario_id": 9,
+      "turno_id": 1,
+      "tematica": null,
+      "foto_cumpleaniero": null,
+      "importe_salon": 95000,
+      "importe_total": 95000,
+      "activo": 1,
+      "modificado": "2025-10-05T11:00:00",
+      "salon_titulo": "Salón A",
+      "nombre": "Reserva",
+      "apellido": "App",
+      "hora_desde": "18:00:00",
+      "hora_hasta": "20:00:00"
+    }
+  ]
+  
+}
+
+settings {
+  encodeUrl: true
+}
