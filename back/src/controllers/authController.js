@@ -9,7 +9,7 @@ export const login = async (req, res) => {
     const { nombre_usuario, contrasenia } = req.body;
 
     if (!nombre_usuario || !contrasenia) {
-      return res.status(400).json({ error: 'Usuario y contraseña son requeridos' });
+      return res.status(400).json({ error: 'Usuario y contrasenia son requeridos' });
     }
 
     const connection = getConnection();

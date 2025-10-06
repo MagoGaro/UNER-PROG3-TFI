@@ -82,7 +82,10 @@ export const getReservaById = async (req, res) => {
 // Crear nueva reserva
 export const createReserva = async (req, res) => {
   try {
-    const { fecha_reserva, salon_id, turno_id, tematica, foto_cumpleaniero, servicios } = req.body;
+    console.log('Se recibio un POST/reserva');
+    console.log('Cuerpo de la solicitud:', req.body);
+
+    const { fecha_reserva, salon_id, turno_id, tematica = null, foto_cumpleaniero = null, servicios } = req.body;
 
     if (!fecha_reserva || !salon_id || !turno_id) {
       return res.status(400).json({ error: 'Fecha, salón y turno son requeridos' });
