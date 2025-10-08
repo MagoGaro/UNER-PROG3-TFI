@@ -1,0 +1,34 @@
+
+@baseUrl = http://localhost:3000/api/v1
+
+### 🔐 PRIMERO: LOGIN COMO ADMINISTRADOR
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "nombre_usuario": "oscram@correo.com",
+  "contrasenia": "password123"
+}
+
+### 🧾 GUARDAR EL TOKEN (copiar el token de la respuesta y reemplazar abajo)
+@adminToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo0LCJub21icmVfdXN1YXJpbyI6Im9zY3JhbUBjb3JyZW8uY29tIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3MjQxMjM0NTAsImV4cCI6MTcyNDIwOTg1MH0.TuTokenAqui
+
+### 📋 1. BROWSE - Ver servicios existentes
+GET {{baseUrl}}/servicios
+
+### ➕ 2. ADD - Crear servicio para probar DELETE
+POST {{baseUrl}}/servicios
+Content-Type: application/json
+Authorization: Bearer {{adminToken}}
+
+{
+  "descripcion": "Servicio Temporal para Prueba DELETE",
+  "importe": 7777
+}
+
+### 🗑️ 3. DELETE - Eliminar el servicio recién creado (cambiar el ID según lo que devuelva el ADD)
+DELETE {{baseUrl}}/servicios/11
+Authorization: Bearer {{adminToken}}
+
+### 📋 4. VERIFICAR - Listar servicios nuevamente (no debería aparecer el eliminado)
+GET {{baseUrl}}/servicios
