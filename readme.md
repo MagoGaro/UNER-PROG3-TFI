@@ -1,6 +1,6 @@
 # Trabajo Practico Final Integrador 🔥
 
-![Lenguaje Principal](https://img.shields.io/badge/Lenguaje-JavaScript-yellow?style=flat-square&logo=javascript)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white)
 
 ## Grupo:
 
