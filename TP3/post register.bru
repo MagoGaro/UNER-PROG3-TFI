@@ -1,0 +1,30 @@
+meta {
+  name: post register
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://localhost:3000/api/v1/auth/register
+  body: json
+  auth: inherit
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+  "nombre": "mayra",
+  "apellido":"rossetto", 
+  "nombre_usuario": "mayra", 
+  "contrasenia": "computadora",
+  "tipo_usuario":"1",
+    "celular": "1111111"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
