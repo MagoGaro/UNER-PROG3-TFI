@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getConnection } from '../config/database.js';
+import { UsuarioDAO } from '../dao/usuarioDAO.js';
 import { config } from '../config/index.js';
 
 // Login de usuario
@@ -12,17 +12,12 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: 'Usuario y contrasenia son requeridos' });
     }
 
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM usuarios WHERE nombre_usuario = ? AND activo = 1',
-      [nombre_usuario]
-    );
+    const user = await UsuarioDAO.findByNombreUsuario(nombre_usuario);
 
-    if (rows.length === 0) {
+    if (!user) {
       return res.status(401).json({ error: 'Credenciales inválidas' });
     }
 
-    const user = rows[0];
     const validPassword = await bcrypt.compare(contrasenia, user.contrasenia);
 
     if (!validPassword) {
@@ -66,15 +61,9 @@ export const register = async (req, res) => {
       return res.status(400).json({ error: 'Todos los campos son requeridos' });
     }
 
-    const connection = getConnection();
-
     // Verificar si el usuario ya existe
-    const [existingUser] = await connection.execute(
-      'SELECT usuario_id FROM usuarios WHERE nombre_usuario = ?',
-      [nombre_usuario]
-    );
-
-    if (existingUser.length > 0) {
+    const exists = await UsuarioDAO.existsByNombreUsuario(nombre_usuario);
+    if (exists) {
       return res.status(400).json({ error: 'El nombre de usuario ya existe' });
     }
 
@@ -82,14 +71,11 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(contrasenia, 10);
 
     // Insertar nuevo usuario
-    const [result] = await connection.execute(
-      'INSERT INTO usuarios (nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular) VALUES (?, ?, ?, ?, ?, ?)',
-      [nombre, apellido, nombre_usuario, hashedPassword, tipo_usuario, celular]
-    );
+    const usuario_id = await UsuarioDAO.create(nombre, apellido, nombre_usuario, hashedPassword, tipo_usuario, celular);
 
     res.status(201).json({
       message: 'Usuario creado exitosamente',
-      usuario_id: result.insertId
+      usuario_id: usuario_id
     });
   } catch (error) {
     console.error('Error en registro:', error);
@@ -100,17 +86,13 @@ export const register = async (req, res) => {
 // Obtener perfil del usuario autenticado
 export const getProfile = async (req, res) => {
   try {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto FROM usuarios WHERE usuario_id = ?',
-      [req.user.usuario_id]
-    );
+    const user = await UsuarioDAO.findById(req.user.usuario_id);
 
-    if (rows.length === 0) {
+    if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    res.json(rows[0]);
+    res.json(user);
   } catch (error) {
     console.error('Error al obtener perfil:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -123,11 +105,7 @@ export const updateProfile = async (req, res) => {
     const { nombre, apellido, celular, foto } = req.body;
     const usuario_id = req.user.usuario_id;
 
-    const connection = getConnection();
-    await connection.execute(
-      'UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, foto = ?, modificado = CURRENT_TIMESTAMP WHERE usuario_id = ?',
-      [nombre, apellido, celular, foto, usuario_id]
-    );
+    await UsuarioDAO.updateProfile(usuario_id, nombre, apellido, celular, foto);
 
     res.json({ message: 'Perfil actualizado exitosamente' });
   } catch (error) {

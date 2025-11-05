@@ -1,12 +1,9 @@
-import { getConnection } from '../config/database.js';
+import { SalonDAO } from '../dao/salonDAO.js';
 
 // Obtener todos los salones
 export const getAllSalones = async (req, res) => {
   try {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM salones WHERE activo = 1 ORDER BY titulo'
-    );
+    const rows = await SalonDAO.findAll();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener salones:', error);
@@ -18,17 +15,13 @@ export const getAllSalones = async (req, res) => {
 export const getSalonById = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM salones WHERE salon_id = ? AND activo = 1',
-      [id]
-    );
+    const salon = await SalonDAO.findById(id);
 
-    if (rows.length === 0) {
+    if (!salon) {
       return res.status(404).json({ error: 'Salón no encontrado' });
     }
 
-    res.json(rows[0]);
+    res.json(salon);
   } catch (error) {
     console.error('Error al obtener salón:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -44,15 +37,11 @@ export const createSalon = async (req, res) => {
       return res.status(400).json({ error: 'Título, dirección e importe son requeridos' });
     }
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'INSERT INTO salones (titulo, direccion, latitud, longitud, capacidad, importe) VALUES (?, ?, ?, ?, ?, ?)',
-      [titulo, direccion, latitud, longitud, capacidad, importe]
-    );
+    const salon_id = await SalonDAO.create(titulo, direccion, latitud, longitud, capacidad, importe);
 
     res.status(201).json({
       message: 'Salón creado exitosamente',
-      salon_id: result.insertId
+      salon_id: salon_id
     });
   } catch (error) {
     console.error('Error al crear salón:', error);
@@ -66,13 +55,9 @@ export const updateSalon = async (req, res) => {
     const { id } = req.params;
     const { titulo, direccion, latitud, longitud, capacidad, importe } = req.body;
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'UPDATE salones SET titulo = ?, direccion = ?, latitud = ?, longitud = ?, capacidad = ?, importe = ?, modificado = CURRENT_TIMESTAMP WHERE salon_id = ?',
-      [titulo, direccion, latitud, longitud, capacidad, importe, id]
-    );
+    const updated = await SalonDAO.update(id, titulo, direccion, latitud, longitud, capacidad, importe);
 
-    if (result.affectedRows === 0) {
+    if (!updated) {
       return res.status(404).json({ error: 'Salón no encontrado' });
     }
 
@@ -88,13 +73,9 @@ export const deleteSalon = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'UPDATE salones SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE salon_id = ?',
-      [id]
-    );
+    const deleted = await SalonDAO.delete(id);
 
-    if (result.affectedRows === 0) {
+    if (!deleted) {
       return res.status(404).json({ error: 'Salón no encontrado' });
     }
 

@@ -1,12 +1,9 @@
-import { getConnection } from '../config/database.js';
+import { TurnoDAO } from '../dao/turnoDAO.js';
 
 // Obtener todos los turnos
 export const getAllTurnos = async (req, res) => {
   try {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM turnos WHERE activo = 1 ORDER BY orden'
-    );
+    const rows = await TurnoDAO.findAll();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener turnos:', error);
@@ -18,17 +15,13 @@ export const getAllTurnos = async (req, res) => {
 export const getTurnoById = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM turnos WHERE turno_id = ? AND activo = 1',
-      [id]
-    );
+    const turno = await TurnoDAO.findById(id);
 
-    if (rows.length === 0) {
+    if (!turno) {
       return res.status(404).json({ error: 'Turno no encontrado' });
     }
 
-    res.json(rows[0]);
+    res.json(turno);
   } catch (error) {
     console.error('Error al obtener turno:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -44,15 +37,11 @@ export const createTurno = async (req, res) => {
       return res.status(400).json({ error: 'Orden, hora desde y hora hasta son requeridos' });
     }
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'INSERT INTO turnos (orden, hora_desde, hora_hasta) VALUES (?, ?, ?)',
-      [orden, hora_desde, hora_hasta]
-    );
+    const turno_id = await TurnoDAO.create(orden, hora_desde, hora_hasta);
 
     res.status(201).json({
       message: 'Turno creado exitosamente',
-      turno_id: result.insertId
+      turno_id: turno_id
     });
   } catch (error) {
     console.error('Error al crear turno:', error);
@@ -66,13 +55,9 @@ export const updateTurno = async (req, res) => {
     const { id } = req.params;
     const { orden, hora_desde, hora_hasta } = req.body;
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'UPDATE turnos SET orden = ?, hora_desde = ?, hora_hasta = ?, modificado = CURRENT_TIMESTAMP WHERE turno_id = ?',
-      [orden, hora_desde, hora_hasta, id]
-    );
+    const updated = await TurnoDAO.update(id, orden, hora_desde, hora_hasta);
 
-    if (result.affectedRows === 0) {
+    if (!updated) {
       return res.status(404).json({ error: 'Turno no encontrado' });
     }
 
@@ -88,13 +73,9 @@ export const deleteTurno = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'UPDATE turnos SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE turno_id = ?',
-      [id]
-    );
+    const deleted = await TurnoDAO.delete(id);
 
-    if (result.affectedRows === 0) {
+    if (!deleted) {
       return res.status(404).json({ error: 'Turno no encontrado' });
     }
 

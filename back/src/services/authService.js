@@ -1,21 +1,16 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { getConnection } from '../config/database.js';
+import { UsuarioDAO } from '../dao/usuarioDAO.js';
 import { config } from '../config/index.js';
 
 export class AuthService {
   static async validateCredentials(nombre_usuario, contrasenia) {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM usuarios WHERE nombre_usuario = ? AND activo = 1',
-      [nombre_usuario]
-    );
+    const user = await UsuarioDAO.findByNombreUsuario(nombre_usuario);
 
-    if (rows.length === 0) {
+    if (!user) {
       return null;
     }
 
-    const user = rows[0];
     const validPassword = await bcrypt.compare(contrasenia, user.contrasenia);
 
     if (!validPassword) {
@@ -40,45 +35,30 @@ export class AuthService {
 
   // Verificar si el usuario ya existe
   static async userExists(nombre_usuario) {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT usuario_id FROM usuarios WHERE nombre_usuario = ?',
-      [nombre_usuario]
-    );
-    return rows.length > 0;
+    return await UsuarioDAO.existsByNombreUsuario(nombre_usuario);
   }
 
   // Crear nuevo usuario
   static async createUser(userData) {
-    const connection = getConnection();
     const hashedPassword = await bcrypt.hash(userData.contrasenia, 10);
-    
-    const [result] = await connection.execute(
-      'INSERT INTO usuarios (nombre, apellido, nombre_usuario, contrasenia, tipo_usuario, celular) VALUES (?, ?, ?, ?, ?, ?)',
-      [userData.nombre, userData.apellido, userData.nombre_usuario, hashedPassword, userData.tipo_usuario, userData.celular]
+    return await UsuarioDAO.create(
+      userData.nombre,
+      userData.apellido,
+      userData.nombre_usuario,
+      hashedPassword,
+      userData.tipo_usuario,
+      userData.celular
     );
-
-    return result.insertId;
   }
 
   // Obtener perfil de usuario
   static async getUserProfile(usuario_id) {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto FROM usuarios WHERE usuario_id = ?',
-      [usuario_id]
-    );
-    return rows[0] || null;
+    return await UsuarioDAO.findById(usuario_id);
   }
 
   // Actualizar perfil de usuario
   static async updateUserProfile(usuario_id, updateData) {
-    const connection = getConnection();
     const { nombre, apellido, celular, foto } = updateData;
-    
-    await connection.execute(
-      'UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, foto = ?, modificado = CURRENT_TIMESTAMP WHERE usuario_id = ?',
-      [nombre, apellido, celular, foto, usuario_id]
-    );
+    await UsuarioDAO.updateProfile(usuario_id, nombre, apellido, celular, foto);
   }
 }

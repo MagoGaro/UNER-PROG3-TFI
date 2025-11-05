@@ -1,12 +1,9 @@
-import { getConnection } from '../config/database.js';
+import { ServicioDAO } from '../dao/servicioDAO.js';
 
 // Obtener todos los servicios
 export const getAllServicios = async (req, res) => {
   try {
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM servicios WHERE activo = 1 ORDER BY descripcion'
-    );
+    const rows = await ServicioDAO.findAll();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener servicios:', error);
@@ -18,17 +15,13 @@ export const getAllServicios = async (req, res) => {
 export const getServicioById = async (req, res) => {
   try {
     const { id } = req.params;
-    const connection = getConnection();
-    const [rows] = await connection.execute(
-      'SELECT * FROM servicios WHERE servicio_id = ? AND activo = 1',
-      [id]
-    );
+    const servicio = await ServicioDAO.findById(id);
 
-    if (rows.length === 0) {
+    if (!servicio) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
     }
 
-    res.json(rows[0]);
+    res.json(servicio);
   } catch (error) {
     console.error('Error al obtener servicio:', error);
     res.status(500).json({ error: 'Error interno del servidor' });
@@ -44,15 +37,11 @@ export const createServicio = async (req, res) => {
       return res.status(400).json({ error: 'Descripción e importe son requeridos' });
     }
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'INSERT INTO servicios (descripcion, importe) VALUES (?, ?)',
-      [descripcion, importe]
-    );
+    const servicio_id = await ServicioDAO.create(descripcion, importe);
 
     res.status(201).json({
       message: 'Servicio creado exitosamente',
-      servicio_id: result.insertId
+      servicio_id: servicio_id
     });
   } catch (error) {
     console.error('Error al crear servicio:', error);
@@ -66,13 +55,9 @@ export const updateServicio = async (req, res) => {
     const { id } = req.params;
     const { descripcion, importe } = req.body;
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'UPDATE servicios SET descripcion = ?, importe = ?, modificado = CURRENT_TIMESTAMP WHERE servicio_id = ?',
-      [descripcion, importe, id]
-    );
+    const updated = await ServicioDAO.update(id, descripcion, importe);
 
-    if (result.affectedRows === 0) {
+    if (!updated) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
     }
 
@@ -88,13 +73,9 @@ export const deleteServicio = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const connection = getConnection();
-    const [result] = await connection.execute(
-      'UPDATE servicios SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE servicio_id = ?',
-      [id]
-    );
+    const deleted = await ServicioDAO.delete(id);
 
-    if (result.affectedRows === 0) {
+    if (!deleted) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
     }
 
