@@ -1,11 +1,11 @@
 meta {
-  name: GET/reservas
+  name: Borrar Reserva
   type: http
-  seq: 1
+  seq: 7
 }
 
-get {
-  url: http://localhost:3000/api/v1/reservas
+delete {
+  url: http://localhost:3000/api/v1/reservas/11
   body: none
   auth: inherit
 }

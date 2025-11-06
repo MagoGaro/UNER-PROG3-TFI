@@ -5,6 +5,7 @@ import { config } from './src/config/index.js';
 import upload from './src/config/multer.js';
 import { errorHandler, notFound } from './src/middlewares/errorHandler.js';
 import v1Routes from './src/v1/routes/index.js';
+import { swaggerDocs } from './src/config/swagger.js';
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Rutas de la API
 app.use('/api/v1', v1Routes);
+swaggerDocs(app, config.port);
 
 // Middleware para manejo de errores
 app.use(notFound);
@@ -26,7 +28,7 @@ const startServer = async () => {
   
   app.listen(config.port, () => {
     console.log(`Servidor corriendo en el puerto ${config.port}`);
-    console.log(`API disponible en: http://localhost:${config.port}/api`);
+    console.log(`API disponible en: http://localhost:${config.port}/api/v1`);
   });
 };
 
