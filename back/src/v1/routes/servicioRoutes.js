@@ -30,3 +30,30 @@ router.delete('/:id',
 );
 
 export default router;
+
+
+/**
+ * @swagger
+ * tags:
+ *   name: Servicios
+ *   description: Catálogo público de servicios
+ */
+
+/**
+ * @swagger
+ * /api/v1/servicios:
+ *   get:
+ *     summary: Lista todos los servicios disponibles
+ *     tags: [Servicios]
+ *     security: []   # público, no requiere token
+ *     responses:
+ *       200:
+ *         description: Lista de servicios
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: { $ref: '#/components/schemas/Servicio' }
+ *       500:
+ *         description: Error interno del servidor
+ */

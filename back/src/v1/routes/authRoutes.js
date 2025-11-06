@@ -12,9 +12,10 @@ const router = express.Router();
  *   description: Endpoints de Autenticación y Perfil
  */
 
-/**
+
+ /**
  * @swagger
- * /auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Inicia sesión de un usuario
  *     tags: [Auth]
@@ -32,11 +33,12 @@ const router = express.Router();
  *                 type: string
  *                 example: "1exitosa."
  *     responses:
- *       '200':
+ *       200:
  *         description: Login exitoso. Devuelve token JWT y datos del usuario.
- *       '401':
+ *       401:
  *         description: Credenciales inválidas.
  */
+
 router.post(
   '/login',
   validateRequired(['nombre_usuario', 'contrasenia']),
@@ -45,7 +47,7 @@ router.post(
 
 /**
  * @swagger
- * /auth/register:
+ * /api/v1/auth/register:
  *   post:
  *     summary: Registra un nuevo usuario
  *     tags: [Auth]
@@ -95,7 +97,7 @@ router.post(
 
 /**
  * @swagger
- * /auth/profile:
+ * /api/v1/auth/profile:
  *   get:
  *     summary: Obtiene el perfil del usuario autenticado
  *     tags: [Auth]

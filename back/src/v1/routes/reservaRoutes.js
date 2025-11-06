@@ -21,3 +21,5 @@ router.put('/:id', reservaController.updateReserva);
 router.delete('/:id', reservaController.deleteReserva);
 
 export default router;
+
+

@@ -30,3 +30,30 @@ router.delete('/:id',
 );
 
 export default router;
+
+
+/**
+ * @swagger
+ * tags:
+ *   name: Turnos
+ *   description: Catálogo público de turnos
+ */
+
+/**
+ * @swagger
+ * /api/v1/turnos:
+ *   get:
+ *     summary: Lista todos los turnos disponibles
+ *     tags: [Turnos]
+ *     security: []   # público, no requiere token
+ *     responses:
+ *       200:
+ *         description: Lista de turnos
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items: { $ref: '#/components/schemas/Turno' }
+ *       500:
+ *         description: Error interno del servidor
+ */
