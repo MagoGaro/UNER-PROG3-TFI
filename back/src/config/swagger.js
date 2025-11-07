@@ -11,11 +11,12 @@ const options = {
       description: "API para la gestión de reservas en un sistema de turnos.",
     },
     servers: [
-      {
-        url: "http://localhost:3000/api/v1",
-        description: "Servidor de Desarrollo Local",
-      },
-    ],
+  {
+    url: "http://localhost:3000",
+    description: "Servidor de Desarrollo Local",
+  },
+],
+
     components: {
   // 🔐 Seguridad
   securitySchemes: {

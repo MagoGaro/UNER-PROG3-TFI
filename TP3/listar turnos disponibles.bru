@@ -1,0 +1,15 @@
+meta {
+  name: listar turnos disponibles
+  type: http
+  seq: 22
+}
+
+get {
+  url: http://localhost:3000/api/v1/turnos
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

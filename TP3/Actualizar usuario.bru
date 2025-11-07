@@ -1,0 +1,31 @@
+meta {
+  name: Actualizar usuario
+  type: http
+  seq: 30
+}
+
+put {
+  url: http://localhost:3000/api/v1/usuarios/10
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NjI0NzcwMDksImV4cCI6MTc2MjU2MzQwOX0.L5TaoWC3OtGYwFea1H67RR6DXn8jfd3kPViXi8zQdQE
+}
+
+body:json {
+  {
+    "nombre": "Marcelito",
+    "apellido": "Tinelli",
+    "nombre_usuario": "M_T",
+    "tipo_usuario": 3,
+    "celular": "1234567891",
+    "foto": "string",
+    "contrasenia": "string"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

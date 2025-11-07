@@ -61,7 +61,6 @@ router.get('/:id', validateId, salonController.getSalonById);
  * /api/v1/salones:
  *   post:
  *     summary: Crea un salón
- *     description: Requiere rol administrador o empleado.
  *     tags: [Salones]
  *     security:
  *       - bearerAuth: []
@@ -71,14 +70,26 @@ router.get('/:id', validateId, salonController.getSalonById);
  *         application/json:
  *           schema:
  *             type: object
- *             required: [nombre, capacidad, direccion]
+ *             required:
+ *               - titulo
+ *               - capacidad
+ *               - direccion
  *             properties:
- *               nombre: { type: string, example: "Salón Infantil Arcoiris" }
- *               capacidad: { type: integer, example: 50 }
- *               direccion: { type: string, example: "Av. Rivadavia 4500" }
+ *               titulo:
+ *                 type: string
+ *                 example: "Salón Infantil Arcoiris"
+ *               capacidad:
+ *                 type: integer
+ *                 example: 50
+ *               direccion:
+ *                 type: string
+ *                 example: "Av. Rivadavia 4500"
+ *               importe:
+ *                 type: number
+ *                 example: 7000
  *     responses:
  *       201:
- *         description: Salón creado
+ *         description: Salón creado exitosamente
  *       400:
  *         description: Datos inválidos
  *       401:

@@ -1,0 +1,31 @@
+meta {
+  name: Crear nuevo usuario
+  type: http
+  seq: 28
+}
+
+post {
+  url: http://localhost:3000/api/v1/usuarios
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NjI0NzcwMDksImV4cCI6MTc2MjU2MzQwOX0.L5TaoWC3OtGYwFea1H67RR6DXn8jfd3kPViXi8zQdQE
+}
+
+body:json {
+  {
+    "nombre": "Marcelo",
+    "apellido": "Tinelli",
+    "nombre_usuario": "marcelo@correo.com",
+    "contrasenia": "password123",
+    "tipo_usuario": 3,
+    "celular": "3442134567",
+    "foto": "string"
+  }
+}
+
+settings {
+  encodeUrl: true
+}

@@ -1,21 +1,33 @@
 meta {
-  name: Delete reserva
+  name: Modificar Reserva
   type: http
-  seq: 5
+  seq: 12
 }
 
-delete {
+put {
   url: http://localhost:3000/api/v1/reservas/2
   body: json
   auth: bearer
 }
 
-headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NTk4OTE0ODQsImV4cCI6MTc1OTk3Nzg4NH0.7Xi1fmO2_Yhru08e2jySHsr7nPk2xTcob2GM6Mbt6Mg
-}
-
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NjI0NzcwMDksImV4cCI6MTc2MjU2MzQwOX0.L5TaoWC3OtGYwFea1H67RR6DXn8jfd3kPViXi8zQdQE
+}
+
+body:json {
+  {
+    "fecha_reserva": "2025-11-21",
+    "salon_id": 2,
+    "turno_id": 2,
+    "tematica": "Princesas",
+    "foto_cumpleaniero": "string",
+    "servicios": [
+      {
+        "servicio_id": 0,
+        "importe": 0
+      }
+    ]
+  }
 }
 
 settings {

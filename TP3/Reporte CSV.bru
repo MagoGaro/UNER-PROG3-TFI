@@ -1,17 +1,13 @@
 meta {
-  name: listar reserva
+  name: Reporte CSV
   type: http
-  seq: 4
+  seq: 10
 }
 
 get {
-  url: http://localhost:3000/api/v1/reservas/
+  url: http://localhost:3000/api/v1/reportes/csv
   body: none
   auth: bearer
-}
-
-headers {
-  Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NTk4OTE0ODQsImV4cCI6MTc1OTk3Nzg4NH0.7Xi1fmO2_Yhru08e2jySHsr7nPk2xTcob2GM6Mbt6Mg
 }
 
 auth:bearer {

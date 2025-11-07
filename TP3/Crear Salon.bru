@@ -1,17 +1,26 @@
 meta {
-  name: Api
+  name: Crear Salon
   type: http
-  seq: 1
+  seq: 14
 }
 
-get {
-  url: http://localhost:3000/api/v1/reservas
-  body: none
+post {
+  url: http://localhost:3000/api/v1/salones
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NjI0NzcwMDksImV4cCI6MTc2MjU2MzQwOX0.L5TaoWC3OtGYwFea1H67RR6DXn8jfd3kPViXi8zQdQE
+}
+
+body:json {
+  {
+    "titulo": "Salón Infantil Arcoiris",
+    "capacidad": 50,
+    "direccion": "Av. Rivadavia 4500",
+    "importe": 700
+  }
 }
 
 settings {

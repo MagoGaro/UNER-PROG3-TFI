@@ -1,0 +1,23 @@
+meta {
+  name: Actualizar salon
+  type: http
+  seq: 15
+}
+
+get {
+  url: http://localhost:3000/api/v1/salones/1
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "nombre": "Juegos",
+    "capacidad": 300,
+    "direccion": "San Lorenzo 2000"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
