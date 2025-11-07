@@ -1,8 +1,3 @@
--- =============================================
--- Stored Procedures para Estadísticas
--- Sistema de Gestión de Reservas de Salones
--- =============================================
-
 -- Eliminar stored procedures si existen (para recrearlos)
 DROP PROCEDURE IF EXISTS sp_get_total_reservas;
 DROP PROCEDURE IF EXISTS sp_get_reservas_por_mes;
