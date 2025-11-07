@@ -5,26 +5,26 @@ meta {
 }
 
 put {
-  url: http://localhost:3000/api/v1/reservas/2
+  url: http://localhost:3000/api/v1/reservas/9
   body: json
   auth: bearer
 }
 
 auth:bearer {
-  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjo5LCJub21icmVfdXN1YXJpbyI6Im1heXJhIiwidGlwb191c3VhcmlvIjoxLCJpYXQiOjE3NjI0NzcwMDksImV4cCI6MTc2MjU2MzQwOX0.L5TaoWC3OtGYwFea1H67RR6DXn8jfd3kPViXi8zQdQE
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3VhcmlvX2lkIjoxMywibm9tYnJlX3VzdWFyaW8iOiJKdWFuX0UiLCJ0aXBvX3VzdWFyaW8iOjIsImlhdCI6MTc2MjU0MDg0MywiZXhwIjoxNzYyNjI3MjQzfQ.Ag-oM8nRYeiqiOfF2fVy40wGqArRi8zJG_di1PU-QAw
 }
 
 body:json {
   {
-    "fecha_reserva": "2025-11-21",
+    "fecha_reserva": "2025-11-20",
     "salon_id": 2,
-    "turno_id": 2,
-    "tematica": "Princesas",
+    "turno_id": 5,
+    "tematica": "ET : pelicula",
     "foto_cumpleaniero": "string",
     "servicios": [
       {
-        "servicio_id": 0,
-        "importe": 0
+        "servicio_id": 2,
+        "importe": 185000
       }
     ]
   }

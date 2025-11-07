@@ -29,15 +29,17 @@ export const getSalonById = async (req, res) => {
 };
 
 // Crear nuevo salón (solo administradores)
+
 export const createSalon = async (req, res) => {
   try {
+
     const { titulo, direccion, latitud, longitud, capacidad, importe } = req.body;
 
-    if (!titulo || !direccion || !importe) {
+    if (!titulo || !direccion || capacidad == null || importe == null) {
       return res.status(400).json({ error: 'Título, dirección e importe son requeridos' });
     }
 
-    const salon_id = await SalonService.createSalon(titulo, direccion, latitud, longitud, capacidad, importe);
+    const salon_id = await SalonService.createSalon(titulo, direccion, latitud ?? null, longitud ?? null, capacidad, importe);
 
     res.status(201).json({
       message: 'Salón creado exitosamente',
@@ -48,6 +50,9 @@ export const createSalon = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
+
+
+
 
 // Actualizar salón (solo administradores)
 export const updateSalon = async (req, res) => {

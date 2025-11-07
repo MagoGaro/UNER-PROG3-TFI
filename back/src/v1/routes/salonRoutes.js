@@ -126,7 +126,7 @@ router.post(
  *           schema:
  *             type: object
  *             properties:
- *               nombre: { type: string }
+ *               titulo: { type: string }
  *               capacidad: { type: integer }
  *               direccion: { type: string }
  *     responses:

@@ -244,7 +244,7 @@ export const validateCreateSalon = [
     .isFloat({ min: -180, max: 180 })
     .withMessage('La longitud debe ser un número entre -180 y 180'),
   body('capacidad')
-    .optional()
+    .notEmpty()
     .isInt({ min: 1 })
     .withMessage('La capacidad debe ser un número entero positivo'),
   body('importe')
