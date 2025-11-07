@@ -1,0 +1,60 @@
+<h2>Nueva Reserva Creada</h2>
+
+<p>Se ha creado una nueva reserva en el sistema. A continuación los detalles:</p>
+
+<div class="info-box">
+    <h3>📋 Información del Cliente</h3>
+    <div class="info-row">
+        <span class="info-label">Nombre:</span>
+        <span class="info-value">{{cliente.nombre}}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Email:</span>
+        <span class="info-value">{{cliente.email}}</span>
+    </div>
+</div>
+
+<div class="info-box">
+    <h3>📅 Detalles de la Reserva</h3>
+    <div class="info-row">
+        <span class="info-label">ID Reserva:</span>
+        <span class="info-value">#{{reserva.id}}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Fecha:</span>
+        <span class="info-value">{{reserva.fecha}}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Salón:</span>
+        <span class="info-value">{{reserva.salon}}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Turno:</span>
+        <span class="info-value">{{reserva.turno}}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Temática:</span>
+        <span class="info-value">{{reserva.tematica}}</span>
+    </div>
+    <div class="info-row">
+        <span class="info-label">Importe Total:</span>
+        <span class="info-value"><strong>{{reserva.importe_total}}</strong></span>
+    </div>
+</div>
+
+{{#if servicios}}
+<div class="info-box">
+    <h3>🎁 Servicios Incluidos</h3>
+    <ul>
+        {{#each servicios}}
+        <li>
+            <strong>{{this.descripcion}}</strong> - 
+            {{this.importe}} ARS
+        </li>
+        {{/each}}
+    </ul>
+</div>
+{{/if}}
+
+<p>Por favor, revise la reserva en el sistema y confírmela cuando esté lista.</p>
+

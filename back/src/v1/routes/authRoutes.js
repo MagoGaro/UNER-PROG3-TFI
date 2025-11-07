@@ -1,6 +1,6 @@
 import express from 'express';
 import { authenticateToken } from '../../middlewares/auth.js';
-import { validateRequired } from '../../middlewares/errorHandler.js';
+import { validateLogin, validateRegister } from '../../middlewares/validators.js';
 import * as authController from '../../controllers/authController.js';
 
 const router = express.Router();
@@ -41,7 +41,7 @@ const router = express.Router();
 
 router.post(
   '/login',
-  validateRequired(['nombre_usuario', 'contrasenia']),
+  validateLogin,
   authController.login
 );
 
@@ -85,13 +85,7 @@ router.post(
  */
 router.post(
   '/register',
-  validateRequired([
-    'nombre',
-    'apellido',
-    'nombre_usuario',
-    'contrasenia',
-    'tipo_usuario',
-  ]),
+  validateRegister,
   authController.register
 );
 
@@ -115,7 +109,7 @@ router.get('/profile', authenticateToken, authController.getProfile);
 
 /**
  * @swagger
- * /auth/profile:
+ * /api/v1/auth/profile:
  *   put:
  *     summary: Actualiza el perfil del usuario autenticado
  *     tags: [Auth]
@@ -130,12 +124,16 @@ router.get('/profile', authenticateToken, authController.getProfile);
  *             properties:
  *               nombre:
  *                 type: string
+ *                 example: "María"
  *               apellido:
  *                 type: string
+ *                 example: "González"
  *               celular:
  *                 type: string
+ *                 example: "3442123456"
  *               foto:
  *                 type: string
+ *                 nullable: true
  *     responses:
  *       '200':
  *         description: Perfil actualizado exitosamente.

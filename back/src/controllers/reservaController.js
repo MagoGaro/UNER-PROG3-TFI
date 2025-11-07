@@ -3,6 +3,7 @@ import { ReservaServicioDAO } from '../dao/reservaServicioDAO.js';
 import { SalonDAO } from '../dao/salonDAO.js';
 import { TurnoDAO } from '../dao/turnoDAO.js';
 import { ServicioDAO } from '../dao/servicioDAO.js';
+import { NotificationService } from '../services/notificationService.js';
 
 // Obtener todas las reservas
 export const getAllReservas = async (req, res) => {
@@ -103,6 +104,11 @@ export const createReserva = async (req, res) => {
       await ReservaDAO.updateImporteTotal(reserva_id, importe_total);
     }
 
+    // Notificar a administradores sobre la nueva reserva (asíncrono, no bloquea la respuesta)
+    NotificationService.notifyAdminNewReserva(reserva_id).catch(err => {
+      console.error('Error al enviar notificación a administradores:', err);
+    });
+
     res.status(201).json({
       message: 'Reserva creada exitosamente',
       reserva_id: reserva_id,
@@ -114,16 +120,14 @@ export const createReserva = async (req, res) => {
   }
 };
 
-// Actualizar reserva
+// Actualizar reserva (solo administradores)
 export const updateReserva = async (req, res) => {
   try {
     const { id } = req.params;
     const { fecha_reserva, salon_id, turno_id, tematica, foto_cumpleaniero, servicios } = req.body;
 
-    const usuario_id = req.user.tipo_usuario !== 1 ? req.user.usuario_id : null;
-    
-    // Verificar que la reserva existe y pertenece al usuario (o es administrador)
-    const reserva = await ReservaDAO.findByIdWithUserCheck(id, usuario_id);
+    // Verificar que la reserva existe (solo administradores pueden modificar)
+    const reserva = await ReservaDAO.findById(id);
     if (!reserva) {
       return res.status(404).json({ error: 'Reserva no encontrada' });
     }
@@ -173,6 +177,12 @@ export const updateReserva = async (req, res) => {
       await ReservaDAO.updateImporteTotal(id, importe_total);
     }
 
+    // Si el administrador actualiza la reserva, se considera confirmada
+    // Notificar al cliente sobre la confirmación (asíncrono, no bloquea la respuesta)
+    NotificationService.notifyClienteReservaConfirmada(id).catch(err => {
+      console.error('Error al enviar notificación al cliente:', err);
+    });
+
     res.json({ message: 'Reserva actualizada exitosamente' });
   } catch (error) {
     console.error('Error al actualizar reserva:', error);
@@ -180,14 +190,13 @@ export const updateReserva = async (req, res) => {
   }
 };
 
-// Eliminar reserva
+// Eliminar reserva (solo administradores)
 export const deleteReserva = async (req, res) => {
   try {
     const { id } = req.params;
-    const usuario_id = req.user.tipo_usuario !== 1 ? req.user.usuario_id : null;
 
-    // Verificar que la reserva existe y pertenece al usuario (o es administrador)
-    const reserva = await ReservaDAO.findByIdWithUserCheck(id, usuario_id);
+    // Verificar que la reserva existe (solo administradores pueden eliminar)
+    const reserva = await ReservaDAO.findById(id);
     if (!reserva) {
       return res.status(404).json({ error: 'Reserva no encontrada' });
     }

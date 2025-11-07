@@ -6,6 +6,8 @@ import turnoRoutes from './turnoRoutes.js';
 import reservaRoutes from './reservaRoutes.js';
 import fileRoutes from './fileRoutes.js';
 import estadisticaRoutes from './estadisticaRoutes.js';
+import usuarioRoutes from './usuarioRoutes.js';
+import reporteRoutes from './reporteRoutes.js';
 
 const router = express.Router();
 
@@ -17,5 +19,7 @@ router.use('/turnos', turnoRoutes);
 router.use('/reservas', reservaRoutes);
 router.use('/files', fileRoutes);
 router.use('/estadisticas', estadisticaRoutes);
+router.use('/usuarios', usuarioRoutes);
+router.use('/reportes', reporteRoutes);
 
 export default router;

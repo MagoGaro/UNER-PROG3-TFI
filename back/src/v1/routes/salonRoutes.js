@@ -1,6 +1,6 @@
 import express from 'express';
 import { authenticateToken, requireRole } from '../../middlewares/auth.js';
-import { validateRequired } from '../../middlewares/errorHandler.js';
+import { validateCreateSalon, validateUpdateSalon, validateId } from '../../middlewares/validators.js';
 import * as salonController from '../../controllers/salonController.js';
 
 const router = express.Router();
@@ -54,14 +54,14 @@ router.get('/', salonController.getAllSalones);
  *       404:
  *         description: Salón no encontrado
  */
-router.get('/:id', salonController.getSalonById);
+router.get('/:id', validateId, salonController.getSalonById);
 
 /**
  * @swagger
  * /api/v1/salones:
  *   post:
  *     summary: Crea un salón
- *     description: Requiere rol administrador.
+ *     description: Requiere rol administrador o empleado.
  *     tags: [Salones]
  *     security:
  *       - bearerAuth: []
@@ -89,8 +89,8 @@ router.get('/:id', salonController.getSalonById);
 router.post(
   '/',
   authenticateToken,
-  requireRole([1]),
-  validateRequired(['nombre', 'capacidad', 'direccion']),
+  requireRole([1, 2]),
+  validateCreateSalon,
   salonController.createSalon
 );
 
@@ -99,7 +99,7 @@ router.post(
  * /api/v1/salones/{id}:
  *   put:
  *     summary: Actualiza un salón
- *     description: Requiere rol administrador.
+ *     description: Requiere rol administrador o empleado.
  *     tags: [Salones]
  *     security:
  *       - bearerAuth: []
@@ -131,7 +131,8 @@ router.post(
 router.put(
   '/:id',
   authenticateToken,
-  requireRole([1]),
+  requireRole([1, 2]),
+  validateUpdateSalon,
   salonController.updateSalon
 );
 
@@ -140,7 +141,7 @@ router.put(
  * /api/v1/salones/{id}:
  *   delete:
  *     summary: Elimina un salón
- *     description: Requiere rol administrador.
+ *     description: Requiere rol administrador o empleado.
  *     tags: [Salones]
  *     security:
  *       - bearerAuth: []
@@ -162,7 +163,8 @@ router.put(
 router.delete(
   '/:id',
   authenticateToken,
-  requireRole([1]),
+  requireRole([1, 2]),
+  validateId,
   salonController.deleteSalon
 );
 

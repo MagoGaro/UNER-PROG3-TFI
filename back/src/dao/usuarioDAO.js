@@ -25,7 +25,7 @@ export class UsuarioDAO {
   static async findById(usuario_id) {
     const connection = getConnection();
     const [rows] = await connection.execute(
-      'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto FROM usuarios WHERE usuario_id = ?',
+      'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, creado, modificado FROM usuarios WHERE usuario_id = ? AND activo = 1',
       [usuario_id]
     );
     return rows[0] || null;
@@ -48,6 +48,44 @@ export class UsuarioDAO {
       'UPDATE usuarios SET nombre = ?, apellido = ?, celular = ?, foto = ?, modificado = CURRENT_TIMESTAMP WHERE usuario_id = ?',
       [nombre, apellido, celular, foto, usuario_id]
     );
+  }
+
+  // Obtener todos los usuarios activos
+  static async findAll() {
+    const connection = getConnection();
+    const [rows] = await connection.execute(
+      'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, creado, modificado FROM usuarios WHERE activo = 1 ORDER BY apellido, nombre'
+    );
+    return rows;
+  }
+
+  // Actualizar usuario (para administradores)
+  static async update(usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto) {
+    const connection = getConnection();
+    const [result] = await connection.execute(
+      'UPDATE usuarios SET nombre = ?, apellido = ?, nombre_usuario = ?, tipo_usuario = ?, celular = ?, foto = ?, modificado = CURRENT_TIMESTAMP WHERE usuario_id = ? AND activo = 1',
+      [nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, usuario_id]
+    );
+    return result.affectedRows > 0;
+  }
+
+  // Eliminar usuario (soft delete)
+  static async delete(usuario_id) {
+    const connection = getConnection();
+    const [result] = await connection.execute(
+      'UPDATE usuarios SET activo = 0, modificado = CURRENT_TIMESTAMP WHERE usuario_id = ?',
+      [usuario_id]
+    );
+    return result.affectedRows > 0;
+  }
+
+  // Obtener todos los clientes activos (tipo_usuario = 3)
+  static async findAllClientes() {
+    const connection = getConnection();
+    const [rows] = await connection.execute(
+      'SELECT usuario_id, nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, creado, modificado FROM usuarios WHERE tipo_usuario = 3 AND activo = 1 ORDER BY apellido, nombre'
+    );
+    return rows;
   }
 }
 
