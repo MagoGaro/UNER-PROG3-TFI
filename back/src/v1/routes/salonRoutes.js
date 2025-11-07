@@ -129,6 +129,9 @@ router.post(
  *               titulo: { type: string }
  *               capacidad: { type: integer }
  *               direccion: { type: string }
+ *               latitud: { type: number }
+ *               longitud: { type: number }
+ *               importe: { type: number }
  *     responses:
  *       200:
  *         description: Salón actualizado
