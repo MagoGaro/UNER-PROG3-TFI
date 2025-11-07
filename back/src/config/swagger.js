@@ -18,7 +18,7 @@ const options = {
 ],
 
     components: {
-  // 🔐 Seguridad
+  //Seguridad
   securitySchemes: {
     bearerAuth: {
       type: 'http',
@@ -27,7 +27,7 @@ const options = {
     },
   },
 
-  // 📘 Schemas reutilizables
+  // Schemas reutilizables
   schemas: {
     AuthLoginInput: {
       type: 'object',
@@ -109,17 +109,17 @@ const options = {
     ]
   },
   // Apunta a los archivos de rutas donde están los comentarios JSDoc
-  apis: ["./src/v1/routes/*.js"], // <--- Volvimos a la ruta relativa
+  apis: ["./src/v1/routes/*.js"],
 };
 
-// Genera la especificación (el "manual")
+// Genera la especificación
 const swaggerSpec = swaggerJSDoc(options);
 
 // Exportamos una función para ser usada en index.js
 export const swaggerDocs = (app, port) => {
   // Ruta para ver la UI de Swagger
   app.use(
-    "/api-docs", // Esta es la URL que visitarás en el navegador
+    "/api-docs",
     swaggerUi.serve,
     swaggerUi.setup(swaggerSpec) 
   );
@@ -131,6 +131,6 @@ export const swaggerDocs = (app, port) => {
   });
 
   console.log(
-    `📑 Documentación disponible en http://localhost:${port}/api-docs`
+    `Documentación disponible en http://localhost:${port}/api-docs`
   );
 };

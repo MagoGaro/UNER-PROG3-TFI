@@ -1,4 +1,3 @@
-import nodemailer from 'nodemailer';
 import hbs from 'nodemailer-express-handlebars';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -14,9 +13,9 @@ import { getConnection } from '../config/database.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Configurar handlebars para nodemailer solo si el transporter es válido
-// Verificar si el transporter tiene el método use (es un transporter real de nodemailer)
-if (typeof transporter.use === 'function') {
+// Configurar handlebars para nodemailer (configuración básica)
+// Esto permite usar plantillas .hbs en los emails
+try {
   transporter.use('compile', hbs({
     viewEngine: {
       extName: '.hbs',
@@ -27,8 +26,8 @@ if (typeof transporter.use === 'function') {
     viewPath: path.join(__dirname, '../templates/email'),
     extName: '.hbs'
   }));
-} else {
-  console.warn('⚠️  Handlebars no configurado: credenciales SMTP no disponibles');
+} catch (error) {
+  console.warn('Error al configurar Handlebars:', error.message);
 }
 
 export class NotificationService {
