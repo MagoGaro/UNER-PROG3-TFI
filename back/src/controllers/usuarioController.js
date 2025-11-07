@@ -1,11 +1,9 @@
-import { UsuarioDAO } from '../dao/usuarioDAO.js';
-import { getConnection } from '../config/database.js';
-import bcrypt from 'bcryptjs';
+import { UsuarioService } from '../services/usuarioService.js';
 
 // Obtener todos los usuarios (solo administradores)
 export const getAllUsuarios = async (req, res) => {
   try {
-    const rows = await UsuarioDAO.findAll();
+    const rows = await UsuarioService.getAllUsuarios();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
@@ -16,7 +14,7 @@ export const getAllUsuarios = async (req, res) => {
 // Obtener todos los clientes (empleados y administradores)
 export const getAllClientes = async (req, res) => {
   try {
-    const rows = await UsuarioDAO.findAllClientes();
+    const rows = await UsuarioService.getAllClientes();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener clientes:', error);
@@ -28,7 +26,7 @@ export const getAllClientes = async (req, res) => {
 export const getUsuarioById = async (req, res) => {
   try {
     const { id } = req.params;
-    const usuario = await UsuarioDAO.findById(id);
+    const usuario = await UsuarioService.getUsuarioById(id);
 
     if (!usuario) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -50,22 +48,15 @@ export const createUsuario = async (req, res) => {
       return res.status(400).json({ error: 'Nombre, apellido, nombre_usuario, contrasenia y tipo_usuario son requeridos' });
     }
 
-    // Verificar si el usuario ya existe
-    const exists = await UsuarioDAO.existsByNombreUsuario(nombre_usuario);
-    if (exists) {
-      return res.status(400).json({ error: 'El nombre de usuario ya existe' });
-    }
-
-    // Validar tipo de usuario
-    if (![1, 2, 3].includes(tipo_usuario)) {
-      return res.status(400).json({ error: 'Tipo de usuario inválido. Debe ser 1 (Administrador), 2 (Empleado) o 3 (Cliente)' });
-    }
-
-    // Encriptar contraseña
-    const hashedPassword = await bcrypt.hash(contrasenia, 10);
-
-    // Insertar nuevo usuario
-    const usuario_id = await UsuarioDAO.create(nombre, apellido, nombre_usuario, hashedPassword, tipo_usuario, celular);
+    const usuario_id = await UsuarioService.createUsuario({
+      nombre,
+      apellido,
+      nombre_usuario,
+      contrasenia,
+      tipo_usuario,
+      celular,
+      foto
+    });
 
     res.status(201).json({
       message: 'Usuario creado exitosamente',
@@ -73,6 +64,9 @@ export const createUsuario = async (req, res) => {
     });
   } catch (error) {
     console.error('Error al crear usuario:', error);
+    if (error.message === 'El nombre de usuario ya existe' || error.message.includes('Tipo de usuario inválido')) {
+      return res.status(400).json({ error: error.message });
+    }
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
@@ -83,55 +77,15 @@ export const updateUsuario = async (req, res) => {
     const { id } = req.params;
     const { nombre, apellido, nombre_usuario, tipo_usuario, celular, foto, contrasenia } = req.body;
 
-    // Verificar que el usuario existe
-    const usuarioExistente = await UsuarioDAO.findById(id);
-    if (!usuarioExistente) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
-    // Si se proporciona un nuevo nombre_usuario, verificar que no esté en uso por otro usuario
-    if (nombre_usuario && nombre_usuario !== usuarioExistente.nombre_usuario) {
-      const exists = await UsuarioDAO.existsByNombreUsuario(nombre_usuario);
-      if (exists) {
-        return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
-      }
-    }
-
-    // Validar tipo de usuario si se proporciona
-    if (tipo_usuario && ![1, 2, 3].includes(tipo_usuario)) {
-      return res.status(400).json({ error: 'Tipo de usuario inválido. Debe ser 1 (Administrador), 2 (Empleado) o 3 (Cliente)' });
-    }
-
-    // Preparar datos para actualizar
-    const datosActualizacion = {
-      nombre: nombre || usuarioExistente.nombre,
-      apellido: apellido || usuarioExistente.apellido,
-      nombre_usuario: nombre_usuario || usuarioExistente.nombre_usuario,
-      tipo_usuario: tipo_usuario || usuarioExistente.tipo_usuario,
-      celular: celular !== undefined ? celular : usuarioExistente.celular,
-      foto: foto !== undefined ? foto : usuarioExistente.foto
-    };
-
-    // Si se proporciona una nueva contraseña, encriptarla
-    if (contrasenia) {
-      const hashedPassword = await bcrypt.hash(contrasenia, 10);
-      // Actualizar contraseña por separado
-      const connection = getConnection();
-      await connection.execute(
-        'UPDATE usuarios SET contrasenia = ?, modificado = CURRENT_TIMESTAMP WHERE usuario_id = ?',
-        [hashedPassword, id]
-      );
-    }
-
-    const updated = await UsuarioDAO.update(
-      id,
-      datosActualizacion.nombre,
-      datosActualizacion.apellido,
-      datosActualizacion.nombre_usuario,
-      datosActualizacion.tipo_usuario,
-      datosActualizacion.celular,
-      datosActualizacion.foto
-    );
+    const updated = await UsuarioService.updateUsuario(id, {
+      nombre,
+      apellido,
+      nombre_usuario,
+      tipo_usuario,
+      celular,
+      foto,
+      contrasenia
+    });
 
     if (!updated) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
@@ -140,6 +94,9 @@ export const updateUsuario = async (req, res) => {
     res.json({ message: 'Usuario actualizado exitosamente' });
   } catch (error) {
     console.error('Error al actualizar usuario:', error);
+    if (error.message === 'El nombre de usuario ya está en uso' || error.message.includes('Tipo de usuario inválido')) {
+      return res.status(400).json({ error: error.message });
+    }
     res.status(500).json({ error: 'Error interno del servidor' });
   }
 };
@@ -149,18 +106,12 @@ export const deleteUsuario = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Verificar que el usuario existe
-    const usuario = await UsuarioDAO.findById(id);
-    if (!usuario) {
-      return res.status(404).json({ error: 'Usuario no encontrado' });
-    }
-
     // No permitir que un administrador se elimine a sí mismo
     if (parseInt(id) === req.user.usuario_id) {
       return res.status(400).json({ error: 'No puedes eliminar tu propio usuario' });
     }
 
-    const deleted = await UsuarioDAO.delete(id);
+    const deleted = await UsuarioService.deleteUsuario(id);
 
     if (!deleted) {
       return res.status(404).json({ error: 'Usuario no encontrado' });

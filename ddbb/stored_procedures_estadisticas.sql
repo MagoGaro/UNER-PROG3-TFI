@@ -4,10 +4,9 @@ DROP PROCEDURE IF EXISTS sp_get_reservas_por_mes;
 DROP PROCEDURE IF EXISTS sp_get_salones_populares;
 DROP PROCEDURE IF EXISTS sp_get_ingresos_totales;
 
--- =============================================
--- Stored Procedure: sp_get_total_reservas
+
 -- Descripción: Obtiene el total de reservas activas
--- =============================================
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_total_reservas()
@@ -19,10 +18,9 @@ END$$
 
 DELIMITER ;
 
--- =============================================
--- Stored Procedure: sp_get_reservas_por_mes
+
 -- Descripción: Obtiene las reservas agrupadas por mes (últimos 12 meses)
--- =============================================
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_reservas_por_mes()
@@ -39,10 +37,9 @@ END$$
 
 DELIMITER ;
 
--- =============================================
--- Stored Procedure: sp_get_salones_populares
+
 -- Descripción: Obtiene los salones más populares ordenados por cantidad de reservas
--- =============================================
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_salones_populares()
@@ -60,10 +57,9 @@ END$$
 
 DELIMITER ;
 
--- =============================================
--- Stored Procedure: sp_get_ingresos_totales
+
 -- Descripción: Obtiene el total de ingresos de todas las reservas activas
--- =============================================
+
 DELIMITER $$
 
 CREATE PROCEDURE sp_get_ingresos_totales()

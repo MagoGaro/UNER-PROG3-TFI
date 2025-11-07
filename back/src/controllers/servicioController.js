@@ -1,9 +1,9 @@
-import { ServicioDAO } from '../dao/servicioDAO.js';
+import { ServicioService } from '../services/servicioService.js';
 
 // Obtener todos los servicios
 export const getAllServicios = async (req, res) => {
   try {
-    const rows = await ServicioDAO.findAll();
+    const rows = await ServicioService.getAllServicios();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener servicios:', error);
@@ -15,7 +15,7 @@ export const getAllServicios = async (req, res) => {
 export const getServicioById = async (req, res) => {
   try {
     const { id } = req.params;
-    const servicio = await ServicioDAO.findById(id);
+    const servicio = await ServicioService.getServicioById(id);
 
     if (!servicio) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
@@ -37,7 +37,7 @@ export const createServicio = async (req, res) => {
       return res.status(400).json({ error: 'Descripción e importe son requeridos' });
     }
 
-    const servicio_id = await ServicioDAO.create(descripcion, importe);
+    const servicio_id = await ServicioService.createServicio(descripcion, importe);
 
     res.status(201).json({
       message: 'Servicio creado exitosamente',
@@ -55,7 +55,7 @@ export const updateServicio = async (req, res) => {
     const { id } = req.params;
     const { descripcion, importe } = req.body;
 
-    const updated = await ServicioDAO.update(id, descripcion, importe);
+    const updated = await ServicioService.updateServicio(id, descripcion, importe);
 
     if (!updated) {
       return res.status(404).json({ error: 'Servicio no encontrado' });
@@ -73,7 +73,7 @@ export const deleteServicio = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deleted = await ServicioDAO.delete(id);
+    const deleted = await ServicioService.deleteServicio(id);
 
     if (!deleted) {
       return res.status(404).json({ error: 'Servicio no encontrado' });

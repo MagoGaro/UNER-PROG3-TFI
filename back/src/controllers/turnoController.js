@@ -1,9 +1,9 @@
-import { TurnoDAO } from '../dao/turnoDAO.js';
+import { TurnoService } from '../services/turnoService.js';
 
 // Obtener todos los turnos
 export const getAllTurnos = async (req, res) => {
   try {
-    const rows = await TurnoDAO.findAll();
+    const rows = await TurnoService.getAllTurnos();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener turnos:', error);
@@ -15,7 +15,7 @@ export const getAllTurnos = async (req, res) => {
 export const getTurnoById = async (req, res) => {
   try {
     const { id } = req.params;
-    const turno = await TurnoDAO.findById(id);
+    const turno = await TurnoService.getTurnoById(id);
 
     if (!turno) {
       return res.status(404).json({ error: 'Turno no encontrado' });
@@ -37,7 +37,7 @@ export const createTurno = async (req, res) => {
       return res.status(400).json({ error: 'Orden, hora desde y hora hasta son requeridos' });
     }
 
-    const turno_id = await TurnoDAO.create(orden, hora_desde, hora_hasta);
+    const turno_id = await TurnoService.createTurno(orden, hora_desde, hora_hasta);
 
     res.status(201).json({
       message: 'Turno creado exitosamente',
@@ -55,7 +55,7 @@ export const updateTurno = async (req, res) => {
     const { id } = req.params;
     const { orden, hora_desde, hora_hasta } = req.body;
 
-    const updated = await TurnoDAO.update(id, orden, hora_desde, hora_hasta);
+    const updated = await TurnoService.updateTurno(id, orden, hora_desde, hora_hasta);
 
     if (!updated) {
       return res.status(404).json({ error: 'Turno no encontrado' });
@@ -73,7 +73,7 @@ export const deleteTurno = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deleted = await TurnoDAO.delete(id);
+    const deleted = await TurnoService.deleteTurno(id);
 
     if (!deleted) {
       return res.status(404).json({ error: 'Turno no encontrado' });

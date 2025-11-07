@@ -1,9 +1,9 @@
-import { SalonDAO } from '../dao/salonDAO.js';
+import { SalonService } from '../services/salonService.js';
 
 // Obtener todos los salones
 export const getAllSalones = async (req, res) => {
   try {
-    const rows = await SalonDAO.findAll();
+    const rows = await SalonService.getAllSalones();
     res.json(rows);
   } catch (error) {
     console.error('Error al obtener salones:', error);
@@ -15,7 +15,7 @@ export const getAllSalones = async (req, res) => {
 export const getSalonById = async (req, res) => {
   try {
     const { id } = req.params;
-    const salon = await SalonDAO.findById(id);
+    const salon = await SalonService.getSalonById(id);
 
     if (!salon) {
       return res.status(404).json({ error: 'Salón no encontrado' });
@@ -37,7 +37,7 @@ export const createSalon = async (req, res) => {
       return res.status(400).json({ error: 'Título, dirección e importe son requeridos' });
     }
 
-    const salon_id = await SalonDAO.create(titulo, direccion, latitud, longitud, capacidad, importe);
+    const salon_id = await SalonService.createSalon(titulo, direccion, latitud, longitud, capacidad, importe);
 
     res.status(201).json({
       message: 'Salón creado exitosamente',
@@ -55,7 +55,7 @@ export const updateSalon = async (req, res) => {
     const { id } = req.params;
     const { titulo, direccion, latitud, longitud, capacidad, importe } = req.body;
 
-    const updated = await SalonDAO.update(id, titulo, direccion, latitud, longitud, capacidad, importe);
+    const updated = await SalonService.updateSalon(id, titulo, direccion, latitud, longitud, capacidad, importe);
 
     if (!updated) {
       return res.status(404).json({ error: 'Salón no encontrado' });
@@ -73,7 +73,7 @@ export const deleteSalon = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const deleted = await SalonDAO.delete(id);
+    const deleted = await SalonService.deleteSalon(id);
 
     if (!deleted) {
       return res.status(404).json({ error: 'Salón no encontrado' });
