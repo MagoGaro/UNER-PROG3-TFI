@@ -58,7 +58,7 @@ export const validateRegister = [
     .isInt({ min: 1, max: 3 })
     .withMessage('El tipo de usuario debe ser 1 (Administrador), 2 (Empleado) o 3 (Cliente)'),
   body('celular')
-    .optional()
+    .notEmpty()
     .trim()
     .isLength({ min: 10, max: 20 })
     .withMessage('El celular debe tener entre 10 y 20 caracteres'),
