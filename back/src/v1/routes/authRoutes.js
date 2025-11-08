@@ -82,9 +82,9 @@ router.post(
  *         description: Usuario creado exitosamente.
  *       '400':
  *         description: El nombre de usuario ya existe o faltan campos.
- *  //   '401':
+ *       '401':
  *        descripcion: Token ausente o invalido.
- * //    '403':
+ *       '403':
  *       description: Permisos insuficientes.
  */
 router.post(
