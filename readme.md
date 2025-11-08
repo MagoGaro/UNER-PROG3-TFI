@@ -11,3 +11,6 @@
 - Maria Julieta Gutierrez
 - Mayra Sofia Rossetto Barcala
 - Gabriel Sebastian Roman
+
+## Video:
+https://drive.google.com/file/d/1d-jjtqzwYByW-OGgz8_fY1ZNgjyjl5kc/view?usp=sharing
